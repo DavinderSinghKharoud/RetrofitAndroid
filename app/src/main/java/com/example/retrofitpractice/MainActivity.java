@@ -7,8 +7,10 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,7 +81,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void getPosts() {
 
-        Call<List<Post>> call = jsonPlaceHolder.getPosts( new Integer[]{2,3,6}, "id", "desc");
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("userId", "1");
+        parameters.put("_sort", "id");
+        parameters.put("_order","desc");
+
+        Call<List<Post>> call = jsonPlaceHolder.getPosts( parameters );
 
         call.enqueue(new Callback<List<Post>>() {
             @Override
