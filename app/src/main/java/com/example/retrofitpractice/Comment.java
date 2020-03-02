@@ -12,7 +12,7 @@ public class Comment {
     @SerializedName("body")
     private String text;
 
-    
+
     public int getPostId() {
         return postId;
     }

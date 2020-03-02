@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.util.List;
+import java.util.ListIterator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textViewResult;
 
+    private JsonPlaceHolder jsonPlaceHolder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +33,51 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create( JsonPlaceHolder.class);
+        jsonPlaceHolder = retrofit.create( JsonPlaceHolder.class);
+
+        //getPosts();
+        getComments();
+    }
+
+    private void getComments() {
+
+        Call<List<Comment>> call = jsonPlaceHolder.getComments();
+
+        call.enqueue(new Callback<List<Comment>>() {
+            @Override
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+
+                if( !response.isSuccessful() ){
+                    textViewResult.setText( "code: " + response.code() );
+                    return;
+                }
+
+                List<Comment> comments = response.body();
+
+                for( Comment comment: comments ){
+
+                    String content = "";
+                    content += "ID: " + comment.getId() + "\n";
+                    content += "Post Id: " + comment.getPostId() + "\n";
+                    content += "Name: " + comment.getName() + "\n\n";
+                    content += "Email: " + comment.getEmail() + "\n";
+                    content += "Text: " + comment.getText() + "\n\n";
+
+                    textViewResult.append( content );
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Comment>> call, Throwable t) {
+
+                textViewResult.setText( t.getMessage() );
+            }
+        });
+    }
+
+    private void getPosts() {
 
         Call<List<Post>> call = jsonPlaceHolder.getPosts();
 
