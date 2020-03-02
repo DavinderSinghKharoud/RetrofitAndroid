@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 public interface JsonPlaceHolder {
 
     @GET("posts")
-    Call<List<Post>> getPosts(@Query("userId") int userId,
+    Call<List<Post>> getPosts(@Query("userId") Integer[] userId,
                               @Query("_sort") String sort,
                               @Query("_order") String order);
 
